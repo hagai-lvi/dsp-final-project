@@ -2,10 +2,6 @@ machine:
   java:
     version: oraclejdk8
 
-dependencies:
-  override:
-    - echo "" # noop
-
 test:
   override:
-    - mvn --activate-profiles skip-emr-test install
+    - mvn install
