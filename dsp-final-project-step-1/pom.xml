@@ -8,6 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>dsp-final-project-step-1</artifactId>
 
     <build>
         <plugins>
@@ -28,7 +29,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>dsp.WordCount</mainClass>
+                            <mainClass>dsp.step1.Step1Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -52,7 +53,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-    <artifactId>dsp-final-project-step-1</artifactId>
 
 
 </project>
