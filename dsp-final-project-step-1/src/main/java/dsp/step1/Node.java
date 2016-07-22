@@ -7,7 +7,8 @@ public class Node {
 	private final String word;
 	private final int headIndex;
 	private final boolean isNoun;
-
+	private final String category;
+	private final String str;
 	public String getWord() {
 		return word;
 	}
@@ -50,9 +51,15 @@ public class Node {
 				'}';
 	}
 
+	public String getStr() {
+		return str;
+	}
+
 	public Node(String str) {
 		this.word = str.split("/")[0];
 		this.headIndex = Integer.parseInt(str.split("/")[3]) - 1;
-		this.isNoun = str.split("/")[1].equals("NN");
+		this.category = str.split("/")[1];
+		this.isNoun = this.category.equals("NN");
+		this.str = str;
 	}
 }

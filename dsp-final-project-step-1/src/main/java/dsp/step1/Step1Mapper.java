@@ -1,17 +1,18 @@
 package dsp.step1;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
-public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
+public class Step1Mapper extends Mapper<Object, Text, Text, Text> {
 
 	final static Logger logger = Logger.getLogger(Step1Mapper.class);
 
@@ -35,22 +36,25 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 		logger.info("tree is: " + tree);
 		logger.info("count is: " + count);
 
-		Vector<String> res = new Vector<>();
 
 		Node[] nodes = getNodes(tree);
 		for (int i = 0; i < nodes.length ; i++){
 			for (int j = i+1 ; j < nodes.length ; j++){
-				addIfNotNull(res, findDependencyPath(nodes, i, j));
-				addIfNotNull(res, findDependencyPath(nodes, j, i));
+				if (nodes[i].isNoun() && nodes[j].isNoun()) {
+					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, i, j));
+					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, j, i));
+				}
 			}
 		}
 
 
 	}
 
-	private void addIfNotNull(Vector<String> vec, String dependencyPath) {
-		if (dependencyPath != null){
-			vec.add(dependencyPath);
+	private void AddDependencyPathIfNotNull(Context context, List<Node> dependencyPath) throws IOException, InterruptedException {
+		if (dependencyPath != null) {
+			Stream<String> stream = dependencyPath.stream().map(node -> node.getStr());
+			List<String> collect = stream.collect(Collectors.toList());
+			context.write(new Text(""), new Text(String.join(" ", collect)));
 		}
 	}
 
@@ -58,15 +62,14 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 	 * Find the dependency path between nodes[i] to nodes[j]
 	 * @return null if no path is found
 	 */
-	static String findDependencyPath(Node[] nodes, int i, int j) {
-		ArrayList<String> indexes = new ArrayList();
-		String res = "";
+	static List<Node> findDependencyPath(Node[] nodes, int i, int j) {
+		ArrayList<Node> res = new ArrayList();
 		while (i != -1) { // When i==-1 we have reached the root
-			indexes.add(Integer.toString(i));
+			res.add(nodes[i]);
 			i = nodes[i].getHeadIndex();
 			if (i == j) {
-				indexes.add(Integer.toString(j));
-				return String.join(", ", indexes);
+				res.add(nodes[j]);
+				return res;
 			}
 		}
 		return null;
