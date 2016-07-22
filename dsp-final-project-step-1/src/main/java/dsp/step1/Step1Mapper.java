@@ -51,6 +51,7 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 	}
 
 	private Node[] getNodes(String tree) {
+		//TODO
 		return new Node[0];
 	}
 }

@@ -25,15 +25,15 @@ public class Step1MapperTest {
 		mapDriver.runTest();
 	}
 
-	@Test
-	public void findDependencyPath() {
-		Node n1 = new Node("abounded/VBD/ccomp/0");
-		Node n2 = new Node("in/IN/prep/1");
-		Node n3 = new Node("large/JJ/amod/4");
-		Node n4 = new Node("numbers/NNS/pobj/2");
-		Node[] arr = new Node[]{n1,n2,n3,n4};
-
-		System.out.println(Step1Mapper.findDependencyPath(arr, 3, 0));
-	}
+//	@Test
+//	public void findDependencyPath() {
+//		Node n1 = new Node("abounded/VBD/ccomp/0");
+//		Node n2 = new Node("in/IN/prep/1");
+//		Node n3 = new Node("large/JJ/amod/4");
+//		Node n4 = new Node("numbers/NNS/pobj/2");
+//		Node[] arr = new Node[]{n1,n2,n3,n4};
+//
+//		System.out.println(Step1Mapper.findDependencyPath(arr, 3, 0));
+//	}
 
 }
