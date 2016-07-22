@@ -20,9 +20,39 @@ public class Node {
 		return isNoun;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Node node = (Node) o;
+
+		if (getHeadIndex() != node.getHeadIndex()) return false;
+		if (isNoun() != node.isNoun()) return false;
+		return getWord().equals(node.getWord());
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = getWord().hashCode();
+		result = 31 * result + getHeadIndex();
+		result = 31 * result + (isNoun() ? 1 : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Node{" +
+				"word='" + word + '\'' +
+				", headIndex=" + headIndex +
+				", isNoun=" + isNoun +
+				'}';
+	}
+
 	public Node(String str) {
 		this.word = str.split("/")[0];
-		this.headIndex = Integer.parseInt(str.split("/")[3]);
+		this.headIndex = Integer.parseInt(str.split("/")[3]) - 1;
 		this.isNoun = str.split("/")[1].equals("NN");
 	}
 }
