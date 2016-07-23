@@ -11,24 +11,31 @@ public class NodeTest {
 
 	private Node n1, n2, n3;
 	private String n1String, n2String, n3String;
+	private String n1CleanString;
+	private String n2CleanString;
+	private String n3CleanString;
 
 	@Before
 	public void setUp() {
-		n1String = "abounded/VBD/ROOT/0";
+		n1CleanString = "abounded/VBD/ROOT";
+		n1String = n1CleanString + "/0";
 		n1 = new Node(n1String);
 
-		n2String = "crew/NN/nsubj/4";
+		// Some words contain more than one word with a separating slash
+		n2CleanString = "hello/world/NN/nsubj";
+		n2String = n2CleanString + "/4";
 		n2 = new Node(n2String);
 
 		// word can be equals to "/"
-		n3String = "//NN/nsubj/4";
+		n3CleanString = "//NN/nsubj";
+		n3String = n3CleanString + "/4";
 		n3 = new Node(n3String);
 	}
 
 	@Test
 	public void getWord() throws Exception {
 		Assert.assertEquals("abounded", n1.getWord());
-		Assert.assertEquals("crew", n2.getWord());
+		Assert.assertEquals("hello/world", n2.getWord());
 		Assert.assertEquals("/", n3.getWord());
 	}
 
@@ -48,9 +55,9 @@ public class NodeTest {
 
 	@Test
 	public void getStr() throws Exception {
-		Assert.assertEquals(n1String, n1.getStr());
-		Assert.assertEquals(n2String, n2.getStr());
-		Assert.assertEquals(n3String, n3.getStr());
+		Assert.assertEquals(n1CleanString, n1.toString());
+		Assert.assertEquals(n2CleanString, n2.toString());
+		Assert.assertEquals(n3CleanString, n3.toString());
 	}
 
 	@Test

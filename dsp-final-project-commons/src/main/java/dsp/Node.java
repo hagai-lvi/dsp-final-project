@@ -8,7 +8,6 @@ public class Node {
 	private final int headIndex;
 	private final boolean isNoun;
 	private final String category;
-	private final String str;
 	private final String dependency;
 
 	public String getWord() {
@@ -34,7 +33,6 @@ public class Node {
 		if (isNoun() != node.isNoun()) return false;
 		if (!getWord().equals(node.getWord())) return false;
 		if (!category.equals(node.category)) return false;
-		if (!getStr().equals(node.getStr())) return false;
 		return dependency.equals(node.dependency);
 
 	}
@@ -45,13 +43,13 @@ public class Node {
 		result = 31 * result + getHeadIndex();
 		result = 31 * result + (isNoun() ? 1 : 0);
 		result = 31 * result + category.hashCode();
-		result = 31 * result + getStr().hashCode();
 		result = 31 * result + dependency.hashCode();
 		return result;
 	}
 
-	public String getStr() {
-		return str;
+	@Override
+	public String toString() {
+		return  String.join("/", this.word, this.category, this.dependency);
 	}
 
 	public String getCategory() {
@@ -63,8 +61,6 @@ public class Node {
 	}
 
 	public Node(String str) {
-		this.str = str;
-
 		int lastIndexOf = str.lastIndexOf("/");
 		this.headIndex = Integer.parseInt(str.substring(lastIndexOf + 1)) - 1;
 		str = str.substring(0, lastIndexOf);

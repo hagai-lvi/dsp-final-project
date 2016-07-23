@@ -68,9 +68,9 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 
 	private void AddDependencyPathIfNotNull(Context context, List<Node> dependencyPath, Node sourceNode, Node dstNode, int count) throws IOException, InterruptedException {
 
-		String nodes = sourceNode.getStr() + " => " + dstNode.getStr();
+		String nodes = sourceNode.toString() + " => " + dstNode.toString();
 		if (dependencyPath != null) {
-			Stream<String> stream = dependencyPath.stream().map(Node::getStr);
+			Stream<String> stream = dependencyPath.stream().map(Node::toString);
 			List<String> collect = stream.collect(Collectors.toList());
 			context.write(new Text(String.join(" ", collect) + "\t" + nodes), new LongWritable(count));
 		}
