@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class Step1Main {
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = Job.getInstance(conf, "word count");
+		Job job = Job.getInstance(conf, "step 1");
 		job.setJarByClass(Step1Main.class);
 		job.setMapperClass(Step1Mapper.class);
 //		job.setCombinerClass(Step1Reducer.class);
