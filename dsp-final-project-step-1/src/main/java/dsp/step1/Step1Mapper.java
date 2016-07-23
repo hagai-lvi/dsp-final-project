@@ -94,7 +94,7 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 	}
 
 	/**
-	 * @throws {@link RuntimeException} if fails to parse the tree
+	 * @throws RuntimeException if fails to parse the tree
 	 */
 	static Node[] getNodes(String tree) {
 		try {
