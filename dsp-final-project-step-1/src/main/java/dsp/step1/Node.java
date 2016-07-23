@@ -56,10 +56,21 @@ public class Node {
 	}
 
 	public Node(String str) {
-		this.word = str.split("/")[0];
-		this.headIndex = Integer.parseInt(str.split("/")[3]) - 1;
-		this.category = str.split("/")[1];
-		this.isNoun = this.category.equals("NN");
 		this.str = str;
+		int lastIndexOf = str.lastIndexOf("/");
+
+		this.headIndex = Integer.parseInt(str.substring(lastIndexOf + 1)) - 1;
+		str = str.substring(0, lastIndexOf);
+
+		lastIndexOf = str.lastIndexOf("/");
+		str = str.substring(0, lastIndexOf);
+		lastIndexOf = str.lastIndexOf("/");
+
+		this.category = str.substring(lastIndexOf + 1);
+		lastIndexOf = str.lastIndexOf("/");
+		str = str.substring(0, lastIndexOf);
+		this.word = str;
+		this.isNoun = this.category.equals("NN");
+
 	}
 }

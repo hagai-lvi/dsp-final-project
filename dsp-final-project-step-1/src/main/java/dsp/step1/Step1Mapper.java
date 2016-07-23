@@ -34,18 +34,32 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 			logger.warn("Got unexpected input: " + value.toString(),e);
 			return;
 		}
-		logger.info("tree is: " + tree);
-		logger.info("count is: " + count);
+		logger.debug("tree is: " + tree);
+		logger.debug("count is: " + count);
 
 
-		Node[] nodes = getNodes(tree);
-		for (int i = 0; i < nodes.length ; i++){
-			for (int j = i+1 ; j < nodes.length ; j++){
-				if (nodes[i].isNoun() && nodes[j].isNoun()) {
-					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, i, j), nodes[i], nodes[j], count);
-					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, j, i), nodes[j], nodes[i], count);
+
+		Node[] nodes;
+		try {
+			nodes = getNodes(tree);
+		}
+		catch (RuntimeException e) {
+			logger.error(e);
+			return;
+		}
+		try {
+			for (int i = 0; i < nodes.length ; i++){
+				for (int j = i+1 ; j < nodes.length ; j++){
+					if (nodes[i].isNoun() && nodes[j].isNoun()) {
+						AddDependencyPathIfNotNull(context, findDependencyPath(nodes, i, j), nodes[i], nodes[j], count);
+						AddDependencyPathIfNotNull(context, findDependencyPath(nodes, j, i), nodes[j], nodes[i], count);
+					}
 				}
 			}
+		}
+		catch (RuntimeException e) {
+			logger.error("Failed to iterate tree. tree is " + tree, e);
+			return;
 		}
 
 
@@ -79,14 +93,22 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 
 	}
 
+	/**
+	 * @throws {@link RuntimeException} if fails to parse the tree
+	 */
 	static Node[] getNodes(String tree) {
-		int size = StringUtils.countMatches(tree, " ") + 1;
+		try {
+			int size = StringUtils.countMatches(tree, " ") + 1;
 
-		Node[] res = new Node[size];
+			Node[] res = new Node[size];
 
-		for (int i = 0 ; i < size ; i++) {
-			res[i] = new Node(tree.split(" ")[i]);
+			for (int i = 0; i < size; i++) {
+				res[i] = new Node(tree.split(" ")[i]);
+			}
+			return res;
 		}
-		return res;
+		catch (Exception e) {
+			throw new RuntimeException("Failed to parse tree " + tree,e);
+		}
 	}
 }
