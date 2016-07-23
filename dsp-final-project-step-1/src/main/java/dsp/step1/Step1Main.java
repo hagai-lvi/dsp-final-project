@@ -14,8 +14,8 @@ public class Step1Main {
 		Job job = Job.getInstance(conf, "word count");
 		job.setJarByClass(Step1Main.class);
 		job.setMapperClass(Step1Mapper.class);
-		job.setCombinerClass(Step1Reducer.class);
-//		job.setReducerClass(IntSumReducer.class);
+//		job.setCombinerClass(Step1Reducer.class);
+		job.setReducerClass(Step1Reducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 		FileInputFormat.addInputPath(job, new Path(args[0]));
