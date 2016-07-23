@@ -1,4 +1,4 @@
-package dsp.step1;
+package dsp;
 
 /**
  * Represents a node in the google syntactic ngram tree

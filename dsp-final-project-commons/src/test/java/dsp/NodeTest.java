@@ -1,4 +1,4 @@
-package dsp.step1;
+package dsp;
 
 import org.junit.Assert;
 import org.junit.Before;
