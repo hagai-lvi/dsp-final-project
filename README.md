@@ -9,9 +9,10 @@ We write each dependency path with its nouns and count.
 Then, in the reduce step, we aggregate all the counts, in (unlikely) case in which a path showed more
 than once.
 An example output line will be
-`zooplankton/NN/nn/4 abundance/NN/pobj/2 zooplankton/NN/nn/4 => abundance/NN/pobj/2      27`.
-In this case, the path contains 2 nodes - `"zooplankton"` and `"abundance"`,
-and it appeared `27` times. The direction of the path is `zooplankton => abundance`.
+`youth/NN pobj among/IN prep problem/NN 16` (the pattern is `<path>\t<count>`).
+In this case, the path contains 3 nodes - `"youth"`,`"among"` and `"problem"`,
+and it appeared `16` times. The direction of the path is `youth=> problem`.
+The labels of the edges in the path are `pobj` and `prep`, respectively.
 2. In our second MR step, we count how many times each dependency path appeared in
 the whole corpus with unique nouns, so that we can filter out rare dependency paths.
 We take each path and extract from it only the "inner parts" (i.e. we remove the outermost nodes).
