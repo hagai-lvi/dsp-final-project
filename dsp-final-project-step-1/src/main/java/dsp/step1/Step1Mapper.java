@@ -10,8 +10,6 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
@@ -52,8 +50,8 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 			for (int i = 0; i < nodes.length ; i++){
 				for (int j = i+1 ; j < nodes.length ; j++){
 					if (nodes[i].isNoun() && nodes[j].isNoun()) {
-						AddDependencyPathIfNotNull(context, findDependencyPath(nodes, i, j), nodes[i], nodes[j], count);
-						AddDependencyPathIfNotNull(context, findDependencyPath(nodes, j, i), nodes[j], nodes[i], count);
+						AddDependencyPathIfNotNull(context, findDependencyPath(nodes, i, j), count);
+						AddDependencyPathIfNotNull(context, findDependencyPath(nodes, j, i), count);
 					}
 				}
 			}
@@ -66,13 +64,11 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 
 	}
 
-	private void AddDependencyPathIfNotNull(Context context, List<Node> dependencyPath, Node sourceNode, Node dstNode, int count) throws IOException, InterruptedException {
+	private void AddDependencyPathIfNotNull(Context context, List<Node> dependencyPath, int count) throws IOException, InterruptedException {
 
-		String nodes = sourceNode.toString() + " => " + dstNode.toString();
 		if (dependencyPath != null) {
-			Stream<String> stream = dependencyPath.stream().map(Node::toString);
-			List<String> collect = stream.collect(Collectors.toList());
-			context.write(new Text(String.join(" ", collect) + "\t" + nodes), new LongWritable(count));
+			String pathRepresentation = Node.getPathRepresentation(dependencyPath);
+			context.write(new Text(pathRepresentation), new LongWritable(count));
 		}
 	}
 

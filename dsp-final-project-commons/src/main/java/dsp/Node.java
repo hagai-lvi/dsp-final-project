@@ -1,5 +1,8 @@
 package dsp;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Represents a node in the google syntactic ngram tree
  */
@@ -78,5 +81,25 @@ public class Node {
 
 		this.isNoun = this.category.equals("NN");
 
+	}
+
+	/**
+	 * @throws RuntimeException if path.size()<2
+	 * @return a string representation of a path
+	 */
+	public static String getPathRepresentation(List<Node> path) {
+		String res = "";
+		if (path.size() < 2) {
+			throw new RuntimeException("Path must be of size >= 2. Got " +
+					Arrays.toString(path.toArray()));
+		}
+
+		for (int i = 0 ; i < path.size() ; i++) {
+			res += path.get(i).getWord() + "/" + path.get(i).getCategory();
+			if (i < path.size() - 1) {
+				res += " " + path.get(i).getDependency() + " ";
+			}
+		}
+		return res;
 	}
 }

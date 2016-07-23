@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
  * Created by hagai_lvi on 23/07/2016.
  */
@@ -72,6 +74,21 @@ public class NodeTest {
 		Assert.assertEquals("ROOT", n1.getDependency());
 		Assert.assertEquals("nsubj", n2.getDependency());
 		Assert.assertEquals("nsubj", n3.getDependency());
+	}
+
+	@Test
+	public void getPathRepresentation() throws Exception {
+		Assert.assertEquals(
+				"//NN nsubj hello/world/NN nsubj abounded/VBD",
+				Node.getPathRepresentation(Arrays.asList(n3, n2, n1)));
+	}
+
+	@Test(expected = RuntimeException.class)
+	/**
+	 * path must be of size>=2
+	 */
+	public void getPathRepresentationThrowsException() throws Exception {
+		Node.getPathRepresentation(Arrays.asList(n1));
 	}
 
 }
