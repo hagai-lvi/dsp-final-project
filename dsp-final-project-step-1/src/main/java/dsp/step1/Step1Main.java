@@ -13,8 +13,8 @@ public class Step1Main {
 		Configuration conf = new Configuration();
 		Job job = Job.getInstance(conf, "word count");
 		job.setJarByClass(Step1Main.class);
-//		job.setMapperClass(TokenizerMapper.class);
-//		job.setCombinerClass(IntSumReducer.class);
+		job.setMapperClass(Step1Mapper.class);
+		job.setCombinerClass(Step1Reducer.class);
 //		job.setReducerClass(IntSumReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);

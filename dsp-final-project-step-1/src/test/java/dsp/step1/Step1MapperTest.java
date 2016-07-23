@@ -9,11 +9,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-/**
- * Created by hagai_lvi on 20/07/2016.
- */
 public class Step1MapperTest {
-	private MapDriver<Object, Text, Text, Text> mapDriver;
+	private MapDriver<Object, Text, Text, LongWritable> mapDriver;
 	private Step1Mapper mapper;
 
 	@Before
@@ -25,7 +22,7 @@ public class Step1MapperTest {
 	@Test
 	public void mapWithPath() throws Exception {
 		mapDriver.withInput(new LongWritable(1), new Text("abounded\tabounded/VBD/ccomp/0 in/IN/prep/1 gold/NN/pobj/2 and/CC/cc/3 silver/NN/conj/3\t23\t1831,4\t1850,1\t1854,1\t1866,1\t1898,5\t1899,2\t1902,1\t1953,2\t1967,1\t1980,3\t1982,1\t2000,1\n"));
-		mapDriver.withOutput(new Text(""), new Text("silver/NN/conj/3 gold/NN/pobj/2"));
+		mapDriver.withOutput(new Text("silver/NN/conj/3 gold/NN/pobj/2"), new LongWritable(23));
 		mapDriver.runTest();
 	}
 
@@ -38,9 +35,9 @@ public class Step1MapperTest {
 	@Test
 	public void mapWithMultipleMatches() throws Exception {
 		mapDriver.withInput(new LongWritable(1), new Text("abounded\tabounded/NN/ccomp/0 in/IN/prep/1 gold/NN/pobj/2 and/CC/cc/3 silver/NN/conj/3\t23\t1831,4\t1850,1\t1854,1\t1866,1\t1898,5\t1899,2\t1902,1\t1953,2\t1967,1\t1980,3\t1982,1\t2000,1\n"));
-		mapDriver.withOutput(new Text(""), new Text("gold/NN/pobj/2 in/IN/prep/1 abounded/NN/ccomp/0"));
-		mapDriver.withOutput(new Text(""), new Text("silver/NN/conj/3 gold/NN/pobj/2 in/IN/prep/1 abounded/NN/ccomp/0"));
-		mapDriver.withOutput(new Text(""), new Text("silver/NN/conj/3 gold/NN/pobj/2"));
+		mapDriver.withOutput(new Text("gold/NN/pobj/2 in/IN/prep/1 abounded/NN/ccomp/0"), new LongWritable(23));
+		mapDriver.withOutput(new Text("silver/NN/conj/3 gold/NN/pobj/2 in/IN/prep/1 abounded/NN/ccomp/0"), new LongWritable(23));
+		mapDriver.withOutput(new Text("silver/NN/conj/3 gold/NN/pobj/2"), new LongWritable(23));
 		mapDriver.runTest();
 	}
 
@@ -52,6 +49,9 @@ public class Step1MapperTest {
 		Node n3 = new Node("numbers/NNS/pobj/2");
 		Node[] arr = new Node[]{n0,n1,n2,n3};
 		List<Node> dependencyPath = Step1Mapper.findDependencyPath(arr, 2, 0);
+
+		Assert.assertNotNull(dependencyPath);
+
 		Assert.assertEquals(4, dependencyPath.size());
 		Assert.assertEquals(dependencyPath.get(0), n2);
 		Assert.assertEquals(dependencyPath.get(1), n3);

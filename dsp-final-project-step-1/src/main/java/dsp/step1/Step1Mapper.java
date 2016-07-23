@@ -1,6 +1,7 @@
 package dsp.step1;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class Step1Mapper extends Mapper<Object, Text, Text, Text> {
+public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 
 	final static Logger logger = Logger.getLogger(Step1Mapper.class);
 
@@ -41,8 +42,8 @@ public class Step1Mapper extends Mapper<Object, Text, Text, Text> {
 		for (int i = 0; i < nodes.length ; i++){
 			for (int j = i+1 ; j < nodes.length ; j++){
 				if (nodes[i].isNoun() && nodes[j].isNoun()) {
-					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, i, j));
-					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, j, i));
+					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, i, j), count);
+					AddDependencyPathIfNotNull(context, findDependencyPath(nodes, j, i), count);
 				}
 			}
 		}
@@ -50,11 +51,11 @@ public class Step1Mapper extends Mapper<Object, Text, Text, Text> {
 
 	}
 
-	private void AddDependencyPathIfNotNull(Context context, List<Node> dependencyPath) throws IOException, InterruptedException {
+	private void AddDependencyPathIfNotNull(Context context, List<Node> dependencyPath, int count) throws IOException, InterruptedException {
 		if (dependencyPath != null) {
-			Stream<String> stream = dependencyPath.stream().map(node -> node.getStr());
+			Stream<String> stream = dependencyPath.stream().map(Node::getStr);
 			List<String> collect = stream.collect(Collectors.toList());
-			context.write(new Text(""), new Text(String.join(" ", collect)));
+			context.write(new Text(String.join(" ", collect)), new LongWritable(count));
 		}
 	}
 
@@ -63,7 +64,7 @@ public class Step1Mapper extends Mapper<Object, Text, Text, Text> {
 	 * @return null if no path is found
 	 */
 	static List<Node> findDependencyPath(Node[] nodes, int i, int j) {
-		ArrayList<Node> res = new ArrayList();
+		ArrayList<Node> res = new ArrayList<>();
 		while (i != -1) { // When i==-1 we have reached the root
 			res.add(nodes[i]);
 			i = nodes[i].getHeadIndex();
