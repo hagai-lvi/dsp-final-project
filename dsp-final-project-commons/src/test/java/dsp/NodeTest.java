@@ -36,7 +36,7 @@ public class NodeTest {
 
 	@Test
 	public void getWord() throws Exception {
-		Assert.assertEquals("abounded", n1.getWord());
+		Assert.assertEquals("abound", n1.getWord());
 		Assert.assertEquals("hello/world", n2.getWord());
 		Assert.assertEquals("/", n3.getWord());
 	}
@@ -57,7 +57,7 @@ public class NodeTest {
 
 	@Test
 	public void getStr() throws Exception {
-		Assert.assertEquals(n1CleanString, n1.toString());
+		Assert.assertEquals("abound/VBD/ROOT", n1.toString());
 		Assert.assertEquals(n2CleanString, n2.toString());
 		Assert.assertEquals(n3CleanString, n3.toString());
 	}
@@ -79,7 +79,7 @@ public class NodeTest {
 	@Test
 	public void getPathRepresentation() throws Exception {
 		Assert.assertEquals(
-				"//NN nsubj hello/world/NN nsubj abounded/VBD",
+				"//NN nsubj hello/world/NN nsubj abound/VBD",
 				Node.getPathRepresentation(Arrays.asList(n3, n2, n1)));
 	}
 

@@ -4,8 +4,8 @@ machine:
 
 dependencies:
   override:
-    - echo "" # noop
+    - mvn install -DskipTests
 
 test:
   override:
-    - mvn install
+    - mvn test
