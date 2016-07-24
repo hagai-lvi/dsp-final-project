@@ -1,5 +1,7 @@
 package dsp;
 
+import dsp.step1.StemmerAdapter;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,7 +79,7 @@ public class Node {
 		lastIndexOf = str.lastIndexOf("/");
 
 		str = str.substring(0, lastIndexOf);
-		this.word = str;
+		this.word = StemmerAdapter.stem(str);
 
 		this.isNoun = this.category.equals("NN");
 
