@@ -2,6 +2,7 @@ package dsp.step3;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import java.io.IOException;
 
@@ -11,8 +12,22 @@ import java.io.IOException;
 public class Step3Reducer extends Reducer<Text, Text, Text, Text> {
 
 	private String currentPath;
+
+	MultipleOutputs<Text, Text> mos;
+
+	@Override
+	protected void cleanup(Context context) throws IOException, InterruptedException {
+		mos.close();
+	}
+	@Override
+	protected void setup(Context context) throws IOException, InterruptedException {
+		super.setup(context);
+	}
+
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+
+
 		if (! key.toString().endsWith(" *")) {
 			this.currentPath = key.toString();
 			return;
