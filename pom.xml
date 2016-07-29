@@ -26,6 +26,7 @@
         <module>dsp-final-project-commons</module>
         <module>dsp-final-project-step-1</module>
         <module>dsp-final-project-step-2</module>
+        <module>dsp-final-project-step-3</module>
     </modules>
 
     <dependencies>
