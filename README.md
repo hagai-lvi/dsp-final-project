@@ -18,3 +18,24 @@ the whole corpus with unique nouns, so that we can filter out rare dependency pa
 We take each path and extract from it only the "inner parts" (i.e. we remove the outermost nodes).
 In the reduce step, we count how many times each path appeared and write it only if it passes
 the given threshold.
+3. The third step, aggregates both of the previous steps.  
+It outputs all the pairs that we have seen in the input, even pairs to which we didn't see any matching path.  
+In addition, for each pair, it emits all the paths with which we have seen it, that have passed the filter in the previous step.  
+For example, for the input:
+```
+tree youth/NN pobj of/IN prep %/NN	133
+path pobj of/IN prep
+tree hello/NN pobj is/IN prep %/NN	133
+tree hello/NN pobj of/IN prep world/NN	133
+```
+this step will output to `wordpairs-r-00000`
+```
+hello %	
+hello world	
+youth %	
+```
+and to `paths-r-00000`, it will output
+```
+hello world	pobj of/IN prep
+youth %	pobj of/IN prep
+```
