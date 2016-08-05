@@ -16,13 +16,22 @@ public class Step3Mapper extends Mapper<Object, Text, Text, Text> {
 	public static final String STEP_2_PREFIX = "path";
 	public static final String STEP_1_PREFIX = "tree";
 
+	// appended to trees representation to make sure that the path created in step 2 will be read by the reducer
+	// before the trees
+	public static final String
+			TREE_POSTFIX = " +",
+			PATH_POSTFIX = " *";
+
+	// Allows us to differentiate noun pairs from other data because we write the noun pairs to a different file
+	public static final String PAIR_PREFIX = "-PAIR-";
+
 	@Override
 	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
 
 		String extractedValue = value.toString().split("\t")[0].substring(value.toString().indexOf(" ") + 1);
 
-		// This is a tree that represents path between to "concrete" words
+		// This is a tree that represents path between 2 "concrete" words
 		if (value.toString().startsWith(STEP_1_PREFIX)) {
 			handleTree(extractedValue, context);
 		}
@@ -39,15 +48,23 @@ public class Step3Mapper extends Mapper<Object, Text, Text, Text> {
 	 * Handle an "abstract" path, i.e with no actual nouns in its external nodes
 	 */
 	void handlePath(String path, Context context) throws IOException, InterruptedException {
-		context.write(new Text(path), new Text("---"));
+		context.write(new Text(path + PATH_POSTFIX), new Text("---"));
 	}
 
 	void handleTree(String tree, Context context) throws IOException, InterruptedException {
 		String path = extractPathFromTree(tree);
 		String nouns = extractNounsFromTree(tree);
 
-		// Use * to make sure that trees are coming after the corresponding path
-		context.write(new Text(path + " *"), new Text(nouns));
+		// Write the pair of words so that the regression model will be aware of all the words that
+		// we have seen, even if it didn't match any "pattern"
+		writeWordPair(nouns, context);
+
+		// Use TREE_POSTFIX to make sure that trees are getting to the reducer after the corresponding path
+		context.write(new Text(path + TREE_POSTFIX), new Text(nouns));
+	}
+
+	private void writeWordPair(String nouns, Context context) throws IOException, InterruptedException {
+		context.write(new Text(PAIR_PREFIX + nouns),new Text());
 	}
 
 	/**

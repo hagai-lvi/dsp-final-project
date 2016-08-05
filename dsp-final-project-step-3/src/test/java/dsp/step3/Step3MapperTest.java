@@ -22,8 +22,9 @@ public class Step3MapperTest {
 
 		mapDriver.withInput(new Text(), new Text("tree youth/NN pobj of/IN prep %/NN\t133"));
 		mapDriver.withInput(new Text(), new Text("path pobj of/IN prep"));
-		mapDriver.withOutput(new Text("pobj of/IN prep *"), new Text("youth %"));
-		mapDriver.withOutput(new Text("pobj of/IN prep"), new Text("---"));
+		mapDriver.withOutput(new Text(Step3Mapper.PAIR_PREFIX + "youth %"), new Text());
+		mapDriver.withOutput(new Text("pobj of/IN prep +"), new Text("youth %"));
+		mapDriver.withOutput(new Text("pobj of/IN prep *"), new Text("---"));
 		mapDriver.runTest();
 	}
 
@@ -32,8 +33,9 @@ public class Step3MapperTest {
 
 		mapDriver.withInput(new Text(), new Text("tree youth/hello/NN pobj of/IN prep %/NN\t133"));
 		mapDriver.withInput(new Text(), new Text("path pobj of/IN prep"));
-		mapDriver.withOutput(new Text("pobj of/IN prep *"), new Text("youth/hello %"));
-		mapDriver.withOutput(new Text("pobj of/IN prep"), new Text("---"));
+		mapDriver.withOutput(new Text(Step3Mapper.PAIR_PREFIX + "youth/hello %"), new Text());
+		mapDriver.withOutput(new Text("pobj of/IN prep +"), new Text("youth/hello %"));
+		mapDriver.withOutput(new Text("pobj of/IN prep *"), new Text("---"));
 		mapDriver.runTest();
 	}
 
