@@ -23,7 +23,7 @@ public class Step1MapperTest {
 	@Test
 	public void mapWithPath() throws Exception {
 		mapDriver.withInput(new LongWritable(1), new Text("abounded\tabounded/VBD/ccomp/0 in/IN/prep/1 gold/NN/pobj/2 and/CC/cc/3 silver/NN/conj/3\t23\t1831,4\t1850,1\t1854,1\t1866,1\t1898,5\t1899,2\t1902,1\t1953,2\t1967,1\t1980,3\t1982,1\t2000,1\n"));
-		mapDriver.withOutput(new Text("silver/NN conj gold/NN"), new LongWritable(23));
+		mapDriver.withOutput(new Text(Step1Mapper.STEP_1_PREFIX + "silver/NN conj gold/NN"), new LongWritable(23));
 		mapDriver.runTest();
 	}
 
@@ -36,9 +36,9 @@ public class Step1MapperTest {
 	@Test
 	public void mapWithMultipleMatches() throws Exception {
 		mapDriver.withInput(new LongWritable(1), new Text("abounded\tabounded/NN/ccomp/0 in/IN/prep/1 gold/NN/pobj/2 and/CC/cc/3 silver/NN/conj/3\t23\t1831,4\t1850,1\t1854,1\t1866,1\t1898,5\t1899,2\t1902,1\t1953,2\t1967,1\t1980,3\t1982,1\t2000,1\n"));
-		mapDriver.withOutput(new Text("gold/NN pobj in/IN prep abound/NN"), new LongWritable(23));
-		mapDriver.withOutput(new Text("silver/NN conj gold/NN pobj in/IN prep abound/NN"), new LongWritable(23));
-		mapDriver.withOutput(new Text("silver/NN conj gold/NN"), new LongWritable(23));
+		mapDriver.withOutput(new Text(Step1Mapper.STEP_1_PREFIX + "gold/NN pobj in/IN prep abound/NN"), new LongWritable(23));
+		mapDriver.withOutput(new Text(Step1Mapper.STEP_1_PREFIX + "silver/NN conj gold/NN pobj in/IN prep abound/NN"), new LongWritable(23));
+		mapDriver.withOutput(new Text(Step1Mapper.STEP_1_PREFIX + "silver/NN conj gold/NN"), new LongWritable(23));
 		mapDriver.runTest();
 	}
 

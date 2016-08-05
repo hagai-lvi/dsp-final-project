@@ -15,6 +15,7 @@ import java.util.List;
 public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 
 	final static Logger logger = Logger.getLogger(Step1Mapper.class);
+	public static final String STEP_1_PREFIX = "tree "; // Help step 3 separate between step 1 and step 2 inputs
 
 	@Override
 	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -68,7 +69,7 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 
 		if (dependencyPath != null) {
 			String pathRepresentation = Node.getPathRepresentation(dependencyPath);
-			context.write(new Text(pathRepresentation), new LongWritable(count));
+			context.write(new Text(STEP_1_PREFIX + pathRepresentation), new LongWritable(count));
 		}
 	}
 
