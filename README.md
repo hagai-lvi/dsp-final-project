@@ -8,6 +8,7 @@ First, we will define the term **"abstract path"** to be a path that does not in
 and a **"concrete path"** to be a path that includes the nouns in the outermost nodes, i.e, specific to 2 nouns.
 
 1. The first step extracts abstract paths from the input, and filters only relevant concrete paths.
+This step also handles stemming.
 We write each concrete path with its nouns and count, and we write each abstract path with all the nouns with which
 we have seen it.
 Then, in the reduce step, we aggregate all the counts, in (unlikely) case in which a concrete path showed more
