@@ -2,7 +2,6 @@ package dsp.step1;
 
 import dsp.Node;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
@@ -12,10 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
+public class Step1Mapper extends Mapper<Object, Text, Text, Text> {
 
 	final static Logger logger = Logger.getLogger(Step1Mapper.class);
 	public static final String STEP_1_PREFIX = "tree "; // Help step 3 separate between step 1 and step 2 inputs
+	public static final String ABSTRACT_PATH_PREFIX = "abstract-path ";
+	private int MIN_OCCURENCES;
+
+	@Override
+	protected void setup(Context context) throws IOException, InterruptedException {
+		int errorValue = -1;
+		MIN_OCCURENCES = context.getConfiguration().getInt(Step1Main.MIN_OCCURENCES, errorValue);
+		if (MIN_OCCURENCES == errorValue) {
+			String message = "Didn't get the MIN_OCCURENCES. Please set the MIN_OCCURENCES variable";
+			logger.error(message);
+			throw new RuntimeException(message);
+		}
+		super.setup(context);
+	}
 
 	@Override
 	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -36,7 +49,6 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 		}
 		logger.debug("tree is: " + tree);
 		logger.debug("count is: " + count);
-
 
 
 		Node[] nodes;
@@ -69,8 +81,26 @@ public class Step1Mapper extends Mapper<Object, Text, Text, LongWritable> {
 
 		if (dependencyPath != null) {
 			String pathRepresentation = Node.getPathRepresentation(dependencyPath);
-			context.write(new Text(STEP_1_PREFIX + pathRepresentation), new LongWritable(count));
+			context.write(new Text(STEP_1_PREFIX + pathRepresentation), new Text(Integer.toString(count)));
+
+			String abstractPath = getAbstractPathRepresentation(pathRepresentation);
+			String outermostNouns = getOutermostNouns(dependencyPath);
+			context.write(new Text(ABSTRACT_PATH_PREFIX + abstractPath),new Text(outermostNouns));
 		}
+	}
+
+	static String getOutermostNouns(List<Node> path) {
+		String word1 = path.get(0).getWord();
+		String word2 = path.get(path.size() - 1).getWord();
+		return String.join(" ", word1, word2);
+	}
+
+
+	/**
+	 * Remove the first and last words in the string, i.e remove the first and last nodes from a path
+	 */
+	private static String getAbstractPathRepresentation(String s) {
+		return s.substring(s.indexOf(" ") + 1, s.lastIndexOf(" "));
 	}
 
 	/**

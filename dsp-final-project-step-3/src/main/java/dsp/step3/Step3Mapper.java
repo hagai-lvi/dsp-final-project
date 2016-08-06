@@ -13,7 +13,7 @@ public class Step3Mapper extends Mapper<Object, Text, Text, Text> {
 
 	final static Logger logger = Logger.getLogger(Step3Mapper.class);
 
-	public static final String STEP_2_PREFIX = "path";
+	public static final String STEP_2_PREFIX = "abstract-path";
 	public static final String STEP_1_PREFIX = "tree";
 
 	// appended to trees representation to make sure that the path created in step 2 will be read by the reducer
@@ -36,7 +36,8 @@ public class Step3Mapper extends Mapper<Object, Text, Text, Text> {
 			handleTree(extractedValue, context);
 		}
 		else if (value.toString().startsWith(STEP_2_PREFIX)) {
-			handlePath(extractedValue, context);
+			String abstractPathID = value.toString().split("\t")[1];
+			handlePath(extractedValue, abstractPathID, context);
 		}
 		else {
 			logger.error("Got unexpected value prefix. expected \"" + STEP_1_PREFIX + "\"" +
@@ -47,8 +48,8 @@ public class Step3Mapper extends Mapper<Object, Text, Text, Text> {
 	/**
 	 * Handle an "abstract" path, i.e with no actual nouns in its external nodes
 	 */
-	void handlePath(String path, Context context) throws IOException, InterruptedException {
-		context.write(new Text(path + PATH_POSTFIX), new Text("---"));
+	void handlePath(String path, String abstractPathID, Context context) throws IOException, InterruptedException {
+		context.write(new Text(path + PATH_POSTFIX), new Text(abstractPathID));
 	}
 
 	void handleTree(String tree, Context context) throws IOException, InterruptedException {

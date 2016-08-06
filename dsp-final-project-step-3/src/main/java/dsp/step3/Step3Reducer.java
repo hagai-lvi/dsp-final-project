@@ -14,6 +14,7 @@ public class Step3Reducer extends Reducer<Text, Text, Text, Text> {
 	final static Logger logger = Logger.getLogger(Step3Reducer.class);
 
 	private String currentPath;
+	private String currentPathID = "-1";
 
 	private MultipleOutputs<Text, Text> mos;
 
@@ -51,7 +52,9 @@ public class Step3Reducer extends Reducer<Text, Text, Text, Text> {
 
 
 		if (key.toString().endsWith(Step3Mapper.PATH_POSTFIX)) {
+			// We got a new abstract path, mark it as the current abstract path
 			this.currentPath = key.toString().substring(0, key.toString().length() - 2);
+			this.currentPathID = values.iterator().next().toString();
 			return;
 		}
 		else if (key.toString().endsWith(Step3Mapper.TREE_POSTFIX)){
@@ -62,7 +65,7 @@ public class Step3Reducer extends Reducer<Text, Text, Text, Text> {
 			}
 
 			for (Text value : values) {
-				mos.write(Step3Main.PATHS_OUTPUT_FILE, value, new Text(currentPath));
+				mos.write(Step3Main.PATHS_OUTPUT_FILE, value, new Text(currentPathID));
 			}
 		}
 		else {
