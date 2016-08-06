@@ -6,6 +6,7 @@ Status: [![CircleCI](https://circleci.com/gh/hagai-lvi/dsp-final-project.svg?sty
 # Map reduce steps:
 First, we will define the term **"abstract path"** to be a path that does not include the nouns in the outermost nodes,
 and a **"concrete path"** to be a path that includes the nouns in the outermost nodes, i.e, specific to 2 nouns.
+
 1. The first step extracts abstract paths from the input, and filters only relevant concrete paths.
 We write each concrete path with its nouns and count, and we write each abstract path with all the nouns with which
 we have seen it.
@@ -19,6 +20,7 @@ An example output line for an abstract path will be
 abstract path `appos august/NNP pobj of/IN prep`, and gave it the UID `2`.
 An exmple for an output line fo a concrete path will be `tree zinc/NN nn metabol/NN      12`,
 which means that we have seen the path `zinc/NN nn metabol/NN` 12 times.
+
 2. In our second MR step, we extract all the word pairs to an output file called `wordpairs`, and for each
 pair, with which paths we have seen it to a file called `paths`.
 For each concrete path, the **mapper** writes the concrete pair of words, i.e. `<key=<nouns>, value="">`.
