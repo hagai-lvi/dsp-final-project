@@ -29,7 +29,9 @@ public class Step1Main {
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		job.setJarByClass(Step1Main.class);
 		job.setMapperClass(Step1Mapper.class);
-//		job.setCombinerClass(Step1Reducer.class);
+
+		// We have decided not to use the combiner because it only hurts performance
+//		job.setCombinerClass(Step1Combiner.class);
 		job.setPartitionerClass(Step1Partitioner.class);
 		job.setReducerClass(Step1Reducer.class);
 		job.setOutputKeyClass(Text.class);
