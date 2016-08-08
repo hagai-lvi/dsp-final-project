@@ -3,12 +3,11 @@ The assignment description is [here](https://www.cs.bgu.ac.il/~dsp162/Assignment
 
 Status: [![CircleCI](https://circleci.com/gh/hagai-lvi/dsp-final-project.svg?style=svg&circle-token=e14fa6380e816fd1665baa9cf38466fdb238838a)](https://circleci.com/gh/hagai-lvi/dsp-final-project)
 
-# Map reduce steps:
+## Map reduce steps:
 First, we will define the term **"abstract path"** to be a path that does not include the nouns in the outermost nodes,
 and a **"concrete path"** to be a path that includes the nouns in the outermost nodes, i.e, specific to 2 nouns.
 
-1. The first step extracts abstract paths from the input, and filters only relevant concrete paths.
-This step also handles stemming.
+1. The first step extracts abstract paths from the input, and filters only relevant concrete paths. This step also handles stemming.
 We write each concrete path with its nouns and count, and we write each abstract path with all the nouns with which
 we have seen it.
 Then, in the reduce step, we aggregate all the counts, in (unlikely) case in which a concrete path showed more
@@ -41,3 +40,17 @@ An exmple to a line in the `paths` output file is `live faith	0`, which means th
 pair `live faith`, with the abstract path whose serial number is `0`.
 An example for a line in the `wordpairs` file, is `zinc metabol` which means that we have seen this
 pair in the input at least once.
+
+
+## Running the app locally
+- Start your local hadoop cluster
+- build the maven artifacts:
+    - `mvn clean install`
+- Create the relevant directories in the hdfs
+    `hadoop fs -mkdir dsp-final-project/step1/input`
+- Upload the input file to the hdfs
+    `hadoop fs -put data/step1/input.txt dsp-final-project/step1/input`
+- Run the jar in hadoop:
+    `hadoop jar dsp-final-project-step-1/target/dsp-final-project-step-1-1.0-SNAPSHOT-job.jar dsp-final-project/step1/input dsp-final-project/step1/output 3`  
+    **NOTE** that you must give the DPMin (last arg) and use the `dsp-final-project-step-1-1.0-SNAPSHOT-job.jar`
+    artifact, and not the `dsp-final-project-step-1-1.0-SNAPSHOT.jar` artifact.
