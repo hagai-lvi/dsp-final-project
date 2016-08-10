@@ -29,18 +29,21 @@ class HypernymClassifier():
         file = 'y.txt'
         print ('writing Y to: '+file)
         np.savetxt(file,self.Y)
-        self._train()
-        self._analyze()
-        self._kfold(k=10)
 
-    def _train(self):
-        clf.fit(self.X, self.Y)
+    def _train_and_save(self):
+        self.clf = RandomForestClassifier()
+        self.clf.fit(self.X, self.Y)
         with open(self.modelFileName, 'w') as f:
             pickle.dump(self.clf, f)
 
     def _load(self):
         with open(self.modelFileName, 'w') as f:
             self.clf = pickle.load(f)
+
+    def _predict(self,X):
+        result = self.clf.predict(X)
+        with open("prediction.txt",'w') as f:
+            f.write(str(result))
 
     def _analyze(self):
         train_idx = self.X.shape[0]//4*3
@@ -174,3 +177,6 @@ if __name__ == "__main__":
     # import warnings
     # warnings.filterwarnings("ignore")
     clf = HypernymClassifier(["paths-r-00000","wordpairs-r-00000"])
+    clf._train_and_save()
+    clf._analyze()
+    clf._kfold(k=10)
