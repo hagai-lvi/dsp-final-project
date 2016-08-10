@@ -1,20 +1,17 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn import svm
-from sklearn import tree
-from sklearn.ensemble import RandomForestClassifier
 import re
-from sklearn import cross_validation
+import cPickle as pickle
+import numpy as np
 from scipy import sparse
-import time
-import scipy.io
+from sklearn import cross_validation
+from sklearn.ensemble import RandomForestClassifier
 from  sklearn.metrics import precision_recall_fscore_support as measure
 
 
 class HypernymClassifier():
 
     def __init__(self, filenames, X=None, Y=None):
-
+        self.clf = None
+        self.modelFileName = "model"
         self.pairDict = {}
         self.maxPattern = 0
         for file in filenames:
@@ -26,15 +23,24 @@ class HypernymClassifier():
         self.X,self.Y = self._convertMapToSparseMatrix(self.pairDict,self.maxPattern+1)
         print ('number of true pairs in Y: ' + str(np.count_nonzero(self.Y)))
         print ('vector length: ' + str (self.maxPattern))
-
         file = 'x.txt'
         print ('writing X to: '+file)
         self._save_sparse_matrix(file,self.X)
         file = 'y.txt'
         print ('writing Y to: '+file)
         np.savetxt(file,self.Y)
+        self._train()
         self._analyze()
         self._kfold(k=10)
+
+    def _train(self):
+        clf.fit(self.X, self.Y)
+        with open(self.modelFileName, 'w') as f:
+            pickle.dump(self.clf, f)
+
+    def _load(self):
+        with open(self.modelFileName, 'w') as f:
+            self.clf = pickle.load(f)
 
     def _analyze(self):
         train_idx = self.X.shape[0]//4*3
